@@ -160,6 +160,30 @@ function actualizarFila(fila, producto) {
 // R5: Ordenar con el select (evento change): ordena una COPIA del arreglo con sort y repinta
 //     con replaceChildren.
 
+selectOrden.addEventListener("change", () =>{
+    const copia = [...inventario];
+
+    switch (selectOrden.value) {
+        case "id":
+            copia.sort((a, b) => a.id - b.id);
+            break;
+
+        case "nombre":
+            copia.sort((a, b) => a.nombre.localCompare(b.nombre));
+            break;
+    
+        case "precio-asc":
+            copia.sort((a, b) => b.precio - a.precio);
+            break;
+
+        case "stock":
+            copia.sort((a, b) => a.stock - b.stock);
+            break;
+    }
+
+    pintarInventario(copia);
+
+});
 // R6: Después de cada cambio, guarda en CLAVE_INVENTARIO y muestra "Productos: 12 |
 //     Unidades: 77 | Agotados: 2". El botón "Restaurar" borra esa clave y vuelve a cargar el
 //     JSON original.
