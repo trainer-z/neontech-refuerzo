@@ -18,14 +18,10 @@ let inventario = [];
 
 // ===== Tu código (comenta cada requisito con // R1, // R2...) =====
 
-// R1: Carga con cargarProductos() (async/await y try/catch), convierte todos los precios a
-//     número y pinta un tr por producto con createElement: código, nombre, categoría,
-//     precio, stock con botones − y + (data-accion restar y sumar) y botón Eliminar
-//     (data-accion eliminar). Cada fila lleva data-id.
-
+// R1: Cargar los productos, normalizar sus datos y construir cada fila con createElement.
 function crearFila(producto) {
-  const tr = document.createElement("tr");
-  tr.setAttribute("data-id", producto.id);
+  const fila = document.createElement("tr");
+  fila.setAttribute("data-id", producto.id);
 
   const tdCodigo = document.createElement("td");
   tdCodigo.textContent = producto.id;
@@ -40,42 +36,73 @@ function crearFila(producto) {
   tdPrecio.textContent = formatoPesos(producto.precio);
 
   const tdStock = document.createElement("td");
-
   const btnRestar = document.createElement("button");
+  btnRestar.type = "button";
   btnRestar.setAttribute("data-accion", "restar");
   btnRestar.textContent = "−";
 
-  const spanCantidad = document.createElement("span");
-  spanCantidad.classList.add("cantidad");
-  spanCantidad.textContent = producto.stock;
+  const cantidad = document.createElement("span");
+  cantidad.classList.add("cantidad");
+  cantidad.textContent = producto.stock;
 
   const btnSumar = document.createElement("button");
+  btnSumar.type = "button";
   btnSumar.setAttribute("data-accion", "sumar");
   btnSumar.textContent = "+";
-
-  tdStock.append(btnRestar, " ", spanCantidad, " ", btnSumar);
+  tdStock.append(btnRestar, " ", cantidad, " ", btnSumar);
 
   const tdAcciones = document.createElement("td");
   const btnEliminar = document.createElement("button");
+  btnEliminar.type = "button";
   btnEliminar.setAttribute("data-accion", "eliminar");
   btnEliminar.textContent = "Eliminar";
   tdAcciones.append(btnEliminar);
 
-  tr.append(tdCodigo, tdNombre, tdCategoria, tdPrecio, tdStock, tdAcciones);
-  return tr;
+  fila.append(tdCodigo, tdNombre, tdCategoria, tdPrecio, tdStock, tdAcciones);
+  actualizarFila(fila, producto);
+  return fila;
 }
 
 function pintarInventario(lista) {
   tabla.replaceChildren();
   for (const producto of lista) {
-    const fila = crearFila(producto);
-    tabla.append(fila);
+    tabla.append(crearFila(producto));
+  }
+}
+
+function actualizarResumen() {
+  const unidades = inventario.reduce((total, producto) => total + producto.stock, 0);
+  const agotados = inventario.filter((producto) => producto.stock === 0).length;
+
+  resumenInventario.classList.remove("fallo");
+  resumenInventario.classList.add("exito");
+  resumenInventario.textContent =
+    `Productos: ${inventario.length} | Unidades: ${unidades} | Agotados: ${agotados}`;
+}
+
+function mostrarError(mensaje) {
+  resumenInventario.classList.remove("exito");
+  resumenInventario.classList.add("fallo");
+  resumenInventario.textContent = mensaje;
+}
+
+function guardarCambios() {
+  try {
+    guardarLocal(CLAVE_INVENTARIO, inventario);
+    actualizarResumen();
+  } catch (error) {
+    console.error("No se pudo guardar el inventario:", error);
+    mostrarError("No se pudieron guardar los cambios del inventario.");
   }
 }
 
 async function iniciarInventario() {
   try {
     const datos = await cargarProductos();
+    if (!Array.isArray(datos)) {
+      throw new TypeError("Los datos del inventario no tienen un formato válido.");
+    }
+
     inventario = datos.map((producto) => ({
       ...producto,
       id: Number(producto.id),
@@ -84,31 +111,25 @@ async function iniciarInventario() {
     }));
 
     pintarInventario(inventario);
-    console.log(`Productos cargados: ${inventario.length}`);
+    actualizarResumen();
   } catch (error) {
     console.error("Error al cargar el inventario:", error);
-    resumenInventario.classList.remove("exito");
-    resumenInventario.classList.add("fallo");
-    resumenInventario.textContent = "Error al cargar los productos del inventario.";
+    inventario = [];
+    tabla.replaceChildren();
+    mostrarError("Error al cargar los productos del inventario.");
   }
 }
 
 iniciarInventario();
 
-// R2: UN solo listener en #tablaInventario: sube del botón a la fila con parentElement
-//     (botón → td → tr). sumar y restar cambian el stock (nunca negativo); eliminar quita la
-//     fila con remove().
-
+// R2: Un solo listener delegado sube del botón a la fila con parentElement.
 tabla.addEventListener("click", (e) => {
   const boton = e.target;
-
-  // R2: se ignoran los clics que no son en un botón (burbujeo)
   if (boton.nodeName !== "BUTTON") return;
 
-  // R2: botón → td → tr
   const fila = boton.parentElement.parentElement;
   const id = Number(fila.getAttribute("data-id"));
-  const producto = inventario.find((p) => p.id === id);
+  const producto = inventario.find((item) => item.id === id);
   const accion = boton.getAttribute("data-accion");
 
   if (producto === undefined) {
@@ -119,24 +140,21 @@ tabla.addEventListener("click", (e) => {
   if (accion === "sumar") {
     producto.stock += 1;
   } else if (accion === "restar") {
-    // R2: el stock nunca queda negativo
     producto.stock = Math.max(0, producto.stock - 1);
   } else if (accion === "eliminar") {
-    // R2: se quita de los datos y de la pantalla
-    inventario = inventario.filter((p) => p.id !== id);
+    inventario = inventario.filter((item) => item.id !== id);
     fila.remove();
-    console.log(`Eliminado: ${producto.nombre}`);
+    guardarCambios();
     return;
   } else {
-    return; // botón sin una acción conocida
+    return;
   }
 
   actualizarFila(fila, producto);
+  guardarCambios();
 });
 
-// R3: Cuando el stock es 0, la fila lleva la clase agotado y muestra "Agotado"
-//     (classList.toggle con condición).
-
+// R3: Mostrar el estado agotado tanto al cargar como al cambiar el stock.
 function actualizarFila(fila, producto) {
   const agotado = producto.stock === 0;
   const cantidad = fila.querySelector(".cantidad");
@@ -153,136 +171,84 @@ function actualizarFila(fila, producto) {
   fila.classList.toggle("agotado", agotado);
 }
 
-// R4: Formulario de producto nuevo: valida nombre (mínimo 3), precio (número mayor que 0) y
-//     stock (entero desde 0). El código nuevo es el mayor actual + 1. Inserta la fila de
-//     primera con insertBefore(fila, tabla.firstElementChild).
-
+// R4: Validar el formulario y añadir el nuevo producto al inicio de la tabla.
 formNuevo.addEventListener("submit", (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const nombre = nuevoNombre.value.trim();
-    const categoria = nuevaCategoria.value;
-    const precio = Number(nuevoPrecio.value.trim());
-    const stock = Number(nuevoStock.value.trim());
+  const nombre = nuevoNombre.value.trim();
+  const precioTexto = nuevoPrecio.value.trim();
+  const stockTexto = nuevoStock.value.trim();
+  const precio = Number(precioTexto);
+  const stock = Number(stockTexto);
 
-
-    if (nombre.length < 3) {
+  if (nombre.length < 3) {
     errorNuevo.textContent = "Error: El nombre debe tener al menos 3 caracteres.";
     return;
-    }
+  }
 
-    if (nuevoPrecio.value.trim() === "" || Number.isNaN(precio) || precio <= 0) {
+  if (precioTexto === "" || !Number.isFinite(precio) || precio <= 0) {
     errorNuevo.textContent = "Error: El precio debe ser un número mayor que 0.";
     return;
-    }
+  }
 
-    if (nuevoStock.value.trim() === "" || !Number.isInteger(stock) || stock < 0) {
+  if (stockTexto === "" || !Number.isInteger(stock) || stock < 0) {
     errorNuevo.textContent = "Error: El stock debe ser un número entero desde 0.";
     return;
-    }
+  }
 
-    errorNuevo.textContent = "";
-
-    const mayorId = inventario.length > 0
-    ? Math.max(...inventario.map((item) => Number(item.id)))
-    : 0;
-    const nuevoId = mayorId + 1;
-
-    const productoNuevo = {
+  const nuevoId = inventario.length === 0
+    ? 1
+    : Math.max(...inventario.map((producto) => Number(producto.id))) + 1;
+  const productoNuevo = {
     id: nuevoId,
     nombre,
-    categoria,
+    categoria: nuevaCategoria.value,
     precio,
-    stock
-    };
+    stock,
+  };
 
-    inventario.push(productoNuevo);
-
-    const fila = crearFila(productoNuevo);
-    tabla.insertBefore(fila, tabla.firstElementChild);
-
-    console.log(`Agregado: ${productoNuevo.nombre} (código ${productoNuevo.id})`);
-
-    formNuevo.reset();
+  inventario.push(productoNuevo);
+  const fila = crearFila(productoNuevo);
+  tabla.insertBefore(fila, tabla.firstElementChild);
+  errorNuevo.textContent = "";
+  formNuevo.reset();
+  guardarCambios();
 });
 
-// R5: Ordenar con el select (evento change): ordena una COPIA del arreglo con sort y repinta
-//     con replaceChildren.
+// R5: Ordenar una copia para no alterar el orden almacenado en el inventario.
+selectOrden.addEventListener("change", () => {
+  const copia = [...inventario];
 
-selectOrden.addEventListener("change", () =>{
-    const copia = [...inventario];
+  switch (selectOrden.value) {
+    case "id":
+      copia.sort((a, b) => a.id - b.id);
+      break;
+    case "nombre":
+      copia.sort((a, b) => a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" }));
+      break;
+    case "precio-asc":
+      copia.sort((a, b) => a.precio - b.precio);
+      break;
+    case "precio-desc":
+      copia.sort((a, b) => b.precio - a.precio);
+      break;
+    case "stock":
+      copia.sort((a, b) => a.stock - b.stock);
+      break;
+    default:
+      return;
+  }
 
-    switch (selectOrden.value) {
-        case "id":
-            copia.sort((a, b) => a.id - b.id);
-            break;
-
-        case "nombre":
-            copia.sort((a, b) => a.nombre.localCompare(b.nombre));
-            break;
-    
-        case "precio-asc":
-            copia.sort((a, b) => b.precio - a.precio);
-            break;
-
-        case "stock":
-            copia.sort((a, b) => a.stock - b.stock);
-            break;
-    }
-
-    pintarInventario(copia);
-
+  pintarInventario(copia);
 });
-// R6: Después de cada cambio, guarda en CLAVE_INVENTARIO y muestra "Productos: 12 |
-//     Unidades: 77 | Agotados: 2". El botón "Restaurar" borra esa clave y vuelve a cargar el
-//     JSON original.
 
-cargarDatosJson();
-
-//Obtener los nuevos productos
-import datos from '../json/productos.json' with { type: 'json' }; console.log("Datos importados directamente:", datos);
-
-//Obtener el inventario unificado
-function obtenerStockCompleto() { 
-    const nuevos = obtenerNuevosCambios(); return [...stockPredeterminado, ...nuevos]; } 
-
-function renderizarCatalogo() { 
-    const contenedor = document.getElementById("contenedorCatalogo"); 
-    const inventario = obtenerStockCompleto(); contenedor.textContent = ""; 
-    
-    inventario.forEach(producto => { 
-    // Crear una tarjeta contenedor para cada producto
-    const tarjeta = document.createElement("article"); 
-    tarjeta.classList.add("tarjeta-producto"); 
-    
-    // Título del producto  
-    const titulo = document.createElement("h3"); 
-    titulo.textContent = producto.nombre; 
-    
-    // Badge visual si está en preventa
-    if (producto.preventa) { 
-        const badge = document.createElement("span"); 
-        badge.textContent = " [PREVENTA]"; 
-        badge.style.color = "#d97706"; 
-        titulo.appendChild(badge); 
-    } 
-        
-    // Información de categoría y stock 
-    const info = document.createElement("p"); 
-    info.textContent = `Categoría: ${producto.categoria.toUpperCase()} | Disponible: ${producto.stock} u.`;
-
-    // Precio del producto formateado 
-    const precio = document.createElement("p"); 
-    precio.textContent = `Precio: $${Number(producto.precio).toLocaleString("es-CO")}`; 
-    
-    // Ensamblar la tarjeta en el DOM de forma segura [2] 
-    tarjeta.appendChild(titulo); 
-    tarjeta.appendChild(info); 
-    tarjeta.appendChild(precio); 
-    contenedor.appendChild(tarjeta); }); } 
-    
-    //Botón para borrar los cambios y volver a mostrar solo el JSON predeterminado
-    const btnRestablecer = document.getElementById("btnRestablecer"); 
-    btnRestablecer.addEventListener("click", () => { localStorage.removeItem("cambiosStock"); // Elimina solo los nuevos registros [1] 
-    renderizarCatalogo();}); // Carga inicial al abrir o recargar la página 
-    renderizarCatalogo();
+// R6: Persistir cambios, mostrar el resumen y restaurar el JSON original.
+btnRestaurar.addEventListener("click", async () => {
+  try {
+    localStorage.removeItem(CLAVE_INVENTARIO);
+    await iniciarInventario();
+  } catch (error) {
+    console.error("Error al restaurar el inventario:", error);
+    mostrarError("No se pudo restaurar el inventario original.");
+  }
+});
