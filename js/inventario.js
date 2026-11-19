@@ -157,6 +157,55 @@ function actualizarFila(fila, producto) {
 //     stock (entero desde 0). El código nuevo es el mayor actual + 1. Inserta la fila de
 //     primera con insertBefore(fila, tabla.firstElementChild).
 
+formNuevo.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const nombre = nuevoNombre.value.trim();
+    const categoria = nuevaCategoria.value;
+    const precio = Number(nuevoPrecio.value.trim());
+    const stock = Number(nuevoStock.value.trim());
+
+
+    if (nombre.length < 3) {
+    errorNuevo.textContent = "Error: El nombre debe tener al menos 3 caracteres.";
+    return;
+    }
+
+    if (nuevoPrecio.value.trim() === "" || Number.isNaN(precio) || precio <= 0) {
+    errorNuevo.textContent = "Error: El precio debe ser un número mayor que 0.";
+    return;
+    }
+
+    if (nuevoStock.value.trim() === "" || !Number.isInteger(stock) || stock < 0) {
+    errorNuevo.textContent = "Error: El stock debe ser un número entero desde 0.";
+    return;
+    }
+
+    errorNuevo.textContent = "";
+
+    const mayorId = inventario.length > 0
+    ? Math.max(...inventario.map((item) => Number(item.id)))
+    : 0;
+    const nuevoId = mayorId + 1;
+
+    const productoNuevo = {
+    id: nuevoId,
+    nombre,
+    categoria,
+    precio,
+    stock
+    };
+
+    inventario.push(productoNuevo);
+
+    const fila = crearFila(productoNuevo);
+    tabla.insertBefore(fila, tabla.firstElementChild);
+
+    console.log(`Agregado: ${productoNuevo.nombre} (código ${productoNuevo.id})`);
+
+    formNuevo.reset();
+});
+
 // R5: Ordenar con el select (evento change): ordena una COPIA del arreglo con sort y repinta
 //     con replaceChildren.
 
