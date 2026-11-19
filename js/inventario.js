@@ -99,8 +99,59 @@ iniciarInventario();
 //     (botón → td → tr). sumar y restar cambian el stock (nunca negativo); eliminar quita la
 //     fila con remove().
 
+tabla.addEventListener("click", (e) => {
+  const boton = e.target;
+
+  // R2: se ignoran los clics que no son en un botón (burbujeo)
+  if (boton.nodeName !== "BUTTON") return;
+
+  // R2: botón → td → tr
+  const fila = boton.parentElement.parentElement;
+  const id = Number(fila.getAttribute("data-id"));
+  const producto = inventario.find((p) => p.id === id);
+  const accion = boton.getAttribute("data-accion");
+
+  if (producto === undefined) {
+    console.error(`No se encontró el producto con código ${id}`);
+    return;
+  }
+
+  if (accion === "sumar") {
+    producto.stock += 1;
+  } else if (accion === "restar") {
+    // R2: el stock nunca queda negativo
+    producto.stock = Math.max(0, producto.stock - 1);
+  } else if (accion === "eliminar") {
+    // R2: se quita de los datos y de la pantalla
+    inventario = inventario.filter((p) => p.id !== id);
+    fila.remove();
+    console.log(`Eliminado: ${producto.nombre}`);
+    return;
+  } else {
+    return; // botón sin una acción conocida
+  }
+
+  actualizarFila(fila, producto);
+});
+
 // R3: Cuando el stock es 0, la fila lleva la clase agotado y muestra "Agotado"
 //     (classList.toggle con condición).
+
+function actualizarFila(fila, producto) {
+  const agotado = producto.stock === 0;
+  const cantidad = fila.querySelector(".cantidad");
+  cantidad.textContent = producto.stock;
+
+  let estado = fila.querySelector(".estado-stock");
+  if (estado === null) {
+    estado = document.createElement("span");
+    estado.classList.add("estado-stock");
+    cantidad.parentElement.append(" ", estado);
+  }
+
+  estado.textContent = agotado ? "Agotado" : "";
+  fila.classList.toggle("agotado", agotado);
+}
 
 // R4: Formulario de producto nuevo: valida nombre (mínimo 3), precio (número mayor que 0) y
 //     stock (entero desde 0). El código nuevo es el mayor actual + 1. Inserta la fila de
