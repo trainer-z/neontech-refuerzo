@@ -1,0 +1,172 @@
+/* =========================================================
+   NeónTech · Estilos comunes (NO modificar esta parte)
+   Cada grupo agrega sus estilos al final, en su sección.
+   ========================================================= */
+
+:root {
+  --fondo: #14092b;
+  --panel: #22123f;
+  --rosa: #ff2e88;
+  --cian: #00d4ff;
+  --naranja: #ff7a18;
+  --verde: #00f5a0;
+  --rojo: #ff4d4d;
+  --texto: #f4ecff;
+  --suave: #b9a8d9;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg, var(--fondo), #2b0f45 70%, #3d1250);
+  color: var(--texto);
+  min-height: 100vh;
+}
+
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
+
+h1, h2, h3 { margin: 0 0 12px; }
+h1 { color: var(--rosa); text-shadow: 0 0 12px rgba(255, 46, 136, .6); }
+
+a { color: var(--cian); }
+
+/* ---------- Menú de navegación ---------- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 12px 24px;
+  background: rgba(0, 0, 0, .35);
+  border-bottom: 2px solid var(--rosa);
+}
+.nav img { height: 36px; }
+.nav a { color: var(--texto); text-decoration: none; font-weight: bold; }
+.nav a:hover, .nav a.activo { color: var(--cian); background: transparent; }
+.nav .carrito-link { margin-left: auto; }
+.contador {
+  display: inline-block;
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: var(--rosa);
+  color: #fff;
+  text-align: center;
+}
+
+/* ---------- Botones ---------- */
+button, .btn {
+  cursor: pointer;
+  border: 2px solid var(--cian);
+  background: transparent;
+  color: var(--texto);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+}
+button:hover, .btn:hover { background: var(--cian); color: var(--fondo); }
+button:disabled { opacity: .4; cursor: not-allowed; background: transparent; color: var(--texto); }
+.btn-principal { border-color: var(--rosa); background: var(--rosa); color: #fff; }
+.btn-principal:hover { background: #ff5aa2; color: #fff; }
+.activo { background: var(--cian); color: var(--fondo); }
+
+/* ---------- Formularios ---------- */
+input, select, textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 2px solid var(--suave);
+  background: var(--panel);
+  color: var(--texto);
+  font-size: 15px;
+}
+input[type="checkbox"], input[type="radio"] { width: auto; }
+label { display: block; margin: 10px 0 4px; font-weight: bold; }
+.campo { margin-bottom: 8px; }
+.error { color: var(--rojo); font-size: 14px; min-height: 18px; margin: 4px 0; }
+.incorrecto { border-color: var(--rojo); }
+.correcto { border-color: var(--verde); }
+
+/* ---------- Tarjetas y paneles ---------- */
+.grilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.panel { margin-bottom: 16px; }
+.panel, .tarjeta {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 14px;
+  padding: 14px;
+}
+.tarjeta img { width: 100%; border-radius: 10px; }
+.precio { color: var(--verde); font-size: 20px; font-weight: bold; }
+.etiqueta { display: inline-block; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+.etiqueta:empty { display: none; }
+.preventa { background: var(--naranja); color: #1a0b2e; }
+.agotado { opacity: .55; }
+.etiqueta.agotado { opacity: 1; background: var(--rojo); color: #fff; }
+
+#filtros, #filtroPuntaje { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+#listaCarrito, #listaResenas, #listaResumen { list-style: none; padding: 0; }
+li.tarjeta { margin-bottom: 10px; }
+li.tarjeta button { margin-right: 6px; }
+
+/* ---------- Mensajes ---------- */
+.mensaje { padding: 10px 14px; border-radius: 10px; margin: 12px 0; }
+.mensaje:empty { display: none; }
+.exito { background: rgba(0, 245, 160, .15); border: 1px solid var(--verde); }
+.fallo { background: rgba(255, 77, 77, .15); border: 1px solid var(--rojo); }
+.oculto { display: none !important; }
+
+/* ---------- Tablas ---------- */
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px; border-bottom: 1px solid rgba(255, 255, 255, .15); text-align: left; }
+th { color: var(--cian); }
+
+/* ---------- Seguimiento ---------- */
+.pasos { display: flex; gap: 8px; list-style: none; padding: 0; flex-wrap: wrap; }
+.paso { flex: 1; min-width: 110px; padding: 10px; border-radius: 10px; background: var(--panel); text-align: center; color: var(--suave); }
+.paso.completado { background: rgba(0, 245, 160, .2); color: var(--texto); }
+.paso.actual { border: 2px solid var(--rosa); color: var(--texto); }
+.paso.cancelado { background: rgba(255, 77, 77, .25); }
+.barra { height: 14px; border-radius: 7px; background: var(--panel); overflow: hidden; margin: 14px 0; }
+.progreso { height: 100%; width: 0; background: linear-gradient(90deg, var(--rosa), var(--cian)); }
+
+/* ---------- Reseñas ---------- */
+.estrellas button { font-size: 26px; border: none; padding: 0 4px; color: var(--suave); }
+.estrellas button:hover { background: transparent; }
+.estrellas button.encendida { color: #ffd166; }
+.excedido { color: var(--rojo); font-weight: bold; }
+
+/* ---------- Contacto (acordeón) ---------- */
+.faq-item { margin-bottom: 8px; }
+.faq-pregunta { width: 100%; text-align: left; }
+.faq-respuesta { display: none; padding: 10px 14px; color: var(--suave); }
+.faq-item.abierta .faq-respuesta { display: block; }
+
+/* ---------- Inicio ---------- */
+.banner { padding: 24px; border-radius: 16px; background: linear-gradient(120deg, var(--rosa), #7b2ff7); }
+.cuenta { font-size: 42px; font-weight: bold; letter-spacing: 2px; }
+.lanzado { color: var(--verde); text-shadow: 0 0 12px var(--verde); }
+
+
+#infoPedido h2 {
+  color: var(--cian);
+  margin-bottom: 6px;
+}
+
+#datosPedido {
+  color: var(--suave);
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+#btnIniciar,
+#btnCancelar,
+#linkResenas {
+  margin-right: 8px;
+  margin-top: 8px;
+}
+
