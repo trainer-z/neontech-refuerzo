@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguimiento · NeónTech</title>
+  <link rel="icon" href="../imagenes/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+  <script src="../js/seguimiento.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html"><img src="../imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="../index.html">Inicio</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="resenas.html">Reseñas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="inventario.html">Inventario</a>
+    <a href="carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <h1>Seguimiento de tu pedido</h1>
+
+    <p id="sinPedido" class="mensaje fallo oculto">No tienes pedidos activos. <a href="catalogo.html">Ir al catálogo</a></p>
+
+    <section id="infoPedido" class="panel">
+      <h2 id="numeroPedido"></h2>
+      <p id="datosPedido"></p>
+
+      <ol id="pasos" class="pasos"></ol>
+      <div class="barra"><div id="progreso" class="progreso"></div></div>
+      <p id="estadoActual" class="mensaje"></p>
+
+      <button id="btnIniciar" class="btn-principal">Ver avance del pedido</button>
+      <button id="btnCancelar">Cancelar pedido</button>
+      <a id="linkResenas" href="resenas.html" class="btn oculto">Dejar una reseña</a>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reseñas · NeónTech</title>
+  <link rel="icon" href="../imagenes/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+  <script src="../js/resenas.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html"><img src="../imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="../index.html">Inicio</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="resenas.html" class="activo">Reseñas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="inventario.html">Inventario</a>
+    <a href="carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <h1>Reseñas de clientes</h1>
+
+    <form id="formResena" class="panel">
+      <label for="producto">Producto</label>
+      <select id="producto">
+        <option value="">Selecciona un producto</option>
+      </select>
+
+      <label for="autor">Tu nombre</label>
+      <input type="text" id="autor" placeholder="Ej: Daniela">
+
+      <label>Calificación</label>
+      <div id="estrellas" class="estrellas">
+        <button type="button" data-valor="1">★</button>
+        <button type="button" data-valor="2">★</button>
+        <button type="button" data-valor="3">★</button>
+        <button type="button" data-valor="4">★</button>
+        <button type="button" data-valor="5">★</button>
+      </div>
+
+      <label for="texto">Tu opinión</label>
+      <textarea id="texto" rows="3" placeholder="Cuéntanos qué te pareció"></textarea>
+      <p id="contador">0/200</p>
+
+      <p id="errorResena" class="error"></p>
+      <button type="submit" class="btn-principal">Publicar reseña</button>
+    </form>
+
+    <div id="filtroPuntaje">
+      <button data-puntaje="0" class="activo">Todas</button>
+      <button data-puntaje="5">5 ★</button>
+      <button data-puntaje="4">4 ★</button>
+      <button data-puntaje="3">3 ★</button>
+      <button data-puntaje="2">2 ★</button>
+      <button data-puntaje="1">1 ★</button>
+    </div>
+    <p id="promedio"></p>
+    <ul id="listaResenas"></ul>
+  </main>
+</body>
+</html>

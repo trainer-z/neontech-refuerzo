@@ -1,0 +1,6 @@
+[
+  { "productoId": 6, "autor": "Valentina", "puntaje": 5, "texto": "El control se siente muy cómodo y la batería dura bastante." },
+  { "productoId": 10, "autor": "Santiago", "puntaje": 4, "texto": "Buen teclado, las luces son bonitas pero suena un poco fuerte." },
+  { "productoId": 1, "autor": "Camila", "puntaje": 5, "texto": "Llegó rápido y bien empacada. La consola es muy silenciosa." },
+  { "productoId": 7, "autor": "Mateo", "puntaje": 3, "texto": "Se escuchan bien, aunque después de dos horas aprietan." }
+]

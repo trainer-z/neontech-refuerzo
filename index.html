@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio · NeónTech</title>
+  <link rel="icon" href="imagenes/logo.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+  <script src="js/inicio.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html"><img src="imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="index.html" class="activo">Inicio</a>
+    <a href="html/catalogo.html">Catálogo</a>
+    <a href="html/resenas.html">Reseñas</a>
+    <a href="html/contacto.html">Contacto</a>
+    <a href="html/inventario.html">Inventario</a>
+    <a href="html/carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <section id="banner" class="banner">
+      <p id="mensajeBanner">Preventa de Costa Neón: reserva tu copia</p>
+      <button id="btnAnterior">◀</button>
+      <button id="btnSiguiente">▶</button>
+    </section>
+
+    <section class="panel">
+      <h2>Lanzamiento de Costa Neón en</h2>
+      <p id="cuentaRegresiva" class="cuenta" data-segundos="90">01:30</p>
+    </section>
+
+    <section class="panel">
+      <h2>Producto destacado</h2>
+      <div id="destacado"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Recibe ofertas</h2>
+      <input type="email" id="correoBoletin" placeholder="Escribe tu correo y pulsa Enter">
+      <p id="mensajeBoletin" class="mensaje"></p>
+    </section>
+  </main>
+</body>
+</html>

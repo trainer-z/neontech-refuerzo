@@ -1,0 +1,14 @@
+[
+  { "id": 1, "nombre": "Consola NX One 1 TB", "categoria": "consolas", "precio": 2899900, "stock": 4, "imagen": "consola.svg", "preventa": false },
+  { "id": 2, "nombre": "Consola NX One Edición Neón", "categoria": "consolas", "precio": 3299900, "stock": 0, "imagen": "consola-neon.svg", "preventa": false },
+  { "id": 3, "nombre": "Costa Neón · Edición estándar", "categoria": "juegos", "precio": 349900, "stock": 20, "imagen": "juego.svg", "preventa": true },
+  { "id": 4, "nombre": "Costa Neón · Edición coleccionista", "categoria": "juegos", "precio": 899900, "stock": 3, "imagen": "juego-coleccion.svg", "preventa": true },
+  { "id": 5, "nombre": "Carreras al Atardecer", "categoria": "juegos", "precio": 219900, "stock": 8, "imagen": "juego-carreras.svg", "preventa": false },
+  { "id": 6, "nombre": "Control inalámbrico Sunset", "categoria": "accesorios", "precio": 289900, "stock": 10, "imagen": "control.svg", "preventa": false },
+  { "id": 7, "nombre": "Audífonos gamer 7.1", "categoria": "accesorios", "precio": "189900", "stock": 6, "imagen": "audifonos.svg", "preventa": false },
+  { "id": 8, "nombre": "Silla gamer Palmera", "categoria": "accesorios", "precio": 749900, "stock": 2, "imagen": "silla.svg", "preventa": false },
+  { "id": 9, "nombre": "Monitor 27\" 165 Hz", "categoria": "pc", "precio": 1149900, "stock": 5, "imagen": "monitor.svg", "preventa": false },
+  { "id": 10, "nombre": "Teclado mecánico RGB", "categoria": "pc", "precio": 259900, "stock": 12, "imagen": "teclado.svg", "preventa": false },
+  { "id": 11, "nombre": "Mouse gamer 16000 DPI", "categoria": "pc", "precio": 129900, "stock": 0, "imagen": "mouse.svg", "preventa": false },
+  { "id": 12, "nombre": "Disco SSD 1 TB", "categoria": "pc", "precio": 399900, "stock": 7, "imagen": "ssd.svg", "preventa": false }
+]

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hacer pedido · NeónTech</title>
+  <link rel="icon" href="../imagenes/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+  <script src="../js/pedido.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html"><img src="../imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="../index.html">Inicio</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="resenas.html">Reseñas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="inventario.html">Inventario</a>
+    <a href="carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <h1>Hacer pedido</h1>
+
+    <section id="resumen" class="panel">
+      <h2>Resumen</h2>
+      <ul id="listaResumen"></ul>
+      <p>Total a pagar: <strong id="totalResumen" class="precio">$0</strong></p>
+    </section>
+
+    <form id="formPedido" class="panel">
+      <div class="campo">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: Laura Pérez">
+        <p class="error" id="error-nombre"></p>
+      </div>
+      <div class="campo">
+        <label for="telefono">Celular</label>
+        <input type="text" id="telefono" name="telefono" placeholder="Ej: 3001234567">
+        <p class="error" id="error-telefono"></p>
+      </div>
+      <div class="campo">
+        <label for="correo">Correo</label>
+        <input type="email" id="correo" name="correo" placeholder="Ej: laura@mail.com">
+        <p class="error" id="error-correo"></p>
+      </div>
+      <div class="campo">
+        <label for="direccion">Dirección de entrega</label>
+        <input type="text" id="direccion" name="direccion" placeholder="Ej: Calle 10 # 20-30">
+        <p class="error" id="error-direccion"></p>
+      </div>
+
+      <div class="campo">
+        <label>Método de pago</label>
+        <label><input type="radio" name="metodo" value="tarjeta"> Tarjeta</label>
+        <label><input type="radio" name="metodo" value="transferencia"> Transferencia</label>
+        <label><input type="radio" name="metodo" value="contraentrega"> Contra entrega</label>
+        <p class="error" id="error-metodo"></p>
+      </div>
+      <div class="campo oculto" id="campoTarjeta">
+        <label for="tarjeta">Últimos 4 dígitos de la tarjeta</label>
+        <input type="text" id="tarjeta" name="tarjeta" placeholder="Ej: 4821">
+        <p class="error" id="error-tarjeta"></p>
+      </div>
+
+      <div class="campo">
+        <label for="franja">Franja de entrega</label>
+        <select id="franja" name="franja">
+          <option value="">Selecciona una franja</option>
+          <option value="mañana">Mañana (8 a. m. - 12 m.)</option>
+          <option value="tarde">Tarde (12 m. - 6 p. m.)</option>
+          <option value="noche">Noche (6 p. m. - 9 p. m.)</option>
+        </select>
+        <p class="error" id="error-franja"></p>
+      </div>
+
+      <label><input type="checkbox" id="terminos" name="terminos"> Acepto los términos y condiciones</label>
+      <p class="error" id="error-terminos"></p>
+
+      <button type="submit" id="btnConfirmar" class="btn-principal">Confirmar pedido</button>
+    </form>
+
+    <div id="mensajeFinal" class="mensaje"></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo · NeónTech</title>
+  <link rel="icon" href="../imagenes/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+  <script src="../js/catalogo.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html"><img src="../imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="../index.html">Inicio</a>
+    <a href="catalogo.html" class="activo">Catálogo</a>
+    <a href="resenas.html">Reseñas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="inventario.html">Inventario</a>
+    <a href="carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <h1>Catálogo</h1>
+    <p id="estado" class="mensaje"></p>
+
+    <input type="text" id="buscador" placeholder="Buscar producto...">
+
+    <div id="filtros">
+      <button data-categoria="todos" class="activo">Todos</button>
+      <button data-categoria="consolas">Consolas</button>
+      <button data-categoria="juegos">Juegos</button>
+      <button data-categoria="accesorios">Accesorios</button>
+      <button data-categoria="pc">PC</button>
+    </div>
+
+    <p id="sinResultados" class="mensaje fallo oculto">No hay productos que coincidan con tu búsqueda.</p>
+    <section id="catalogo" class="grilla"></section>
+
+    <!-- Plantilla de una tarjeta de producto (no se ve hasta clonarla) -->
+    <template id="tpl-producto">
+      <article class="tarjeta">
+        <img src="" alt="">
+        <span class="etiqueta"></span>
+        <h3 class="nombre"></h3>
+        <p class="categoria"></p>
+        <p class="precio"></p>
+        <button class="btn-agregar">Agregar al carrito</button>
+      </article>
+    </template>
+  </main>
+</body>
+</html>

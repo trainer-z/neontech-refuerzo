@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito · NeónTech</title>
+  <link rel="icon" href="../imagenes/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+  <script src="../js/carrito.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html"><img src="../imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="../index.html">Inicio</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="resenas.html">Reseñas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="inventario.html">Inventario</a>
+    <a href="carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <h1>Tu carrito</h1>
+
+    <p id="vacio" class="mensaje fallo oculto">Tu carrito está vacío. <a href="catalogo.html">Ir al catálogo</a></p>
+    <ul id="listaCarrito"></ul>
+
+    <section class="panel">
+      <label for="cupon">Cupón de descuento (pulsa Enter para aplicarlo)</label>
+      <input type="text" id="cupon" placeholder="Ej: NEON10">
+      <p id="mensajeCupon" class="mensaje"></p>
+
+      <p>Subtotal: <strong id="subtotal">$0</strong></p>
+      <p>Descuento: <strong id="descuento">$0</strong></p>
+      <p>Envío: <strong id="envio">$0</strong></p>
+      <p>Total: <strong id="total" class="precio">$0</strong></p>
+
+      <button id="btnVaciar">Vaciar carrito</button>
+      <button id="btnPedido" class="btn-principal" disabled>Hacer pedido</button>
+    </section>
+  </main>
+</body>
+</html>

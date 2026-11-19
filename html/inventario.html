@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventario · NeónTech</title>
+  <link rel="icon" href="../imagenes/logo.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/script.js" defer></script>
+  <script src="../js/inventario.js" defer></script>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../index.html"><img src="../imagenes/logo.svg" alt="NeónTech"></a>
+    <a href="../index.html">Inicio</a>
+    <a href="catalogo.html">Catálogo</a>
+    <a href="resenas.html">Reseñas</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="inventario.html" class="activo">Inventario</a>
+    <a href="carrito.html" class="carrito-link">🛒 Carrito <span id="contadorCarrito" class="contador">0</span></a>
+  </nav>
+
+  <main>
+    <h1>Inventario (administrador)</h1>
+    <p id="resumenInventario" class="mensaje exito"></p>
+
+    <form id="formNuevo" class="panel">
+      <h2>Agregar producto</h2>
+      <label for="nuevoNombre">Nombre</label>
+      <input type="text" id="nuevoNombre">
+      <label for="nuevaCategoria">Categoría</label>
+      <select id="nuevaCategoria">
+        <option value="consolas">Consolas</option>
+        <option value="juegos">Juegos</option>
+        <option value="accesorios">Accesorios</option>
+        <option value="pc">PC</option>
+      </select>
+      <label for="nuevoPrecio">Precio</label>
+      <input type="text" id="nuevoPrecio">
+      <label for="nuevoStock">Stock</label>
+      <input type="text" id="nuevoStock">
+      <p id="errorNuevo" class="error"></p>
+      <button type="submit" class="btn-principal">Agregar</button>
+    </form>
+
+    <label for="orden">Ordenar por</label>
+    <select id="orden">
+      <option value="id">Código</option>
+      <option value="nombre">Nombre (A-Z)</option>
+      <option value="precio-asc">Precio (menor a mayor)</option>
+      <option value="precio-desc">Precio (mayor a menor)</option>
+      <option value="stock">Stock (menor a mayor)</option>
+    </select>
+
+    <table>
+      <thead>
+        <tr><th>Código</th><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+      </thead>
+      <tbody id="tablaInventario"></tbody>
+    </table>
+
+    <button id="btnRestaurar">Restaurar inventario original</button>
+  </main>
+</body>
+</html>
