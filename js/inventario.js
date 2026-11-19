@@ -23,6 +23,78 @@ let inventario = [];
 //     precio, stock con botones − y + (data-accion restar y sumar) y botón Eliminar
 //     (data-accion eliminar). Cada fila lleva data-id.
 
+function crearFila(producto) {
+  const tr = document.createElement("tr");
+  tr.setAttribute("data-id", producto.id);
+
+  const tdCodigo = document.createElement("td");
+  tdCodigo.textContent = producto.id;
+
+  const tdNombre = document.createElement("td");
+  tdNombre.textContent = producto.nombre;
+
+  const tdCategoria = document.createElement("td");
+  tdCategoria.textContent = producto.categoria;
+
+  const tdPrecio = document.createElement("td");
+  tdPrecio.textContent = formatoPesos(producto.precio);
+
+  const tdStock = document.createElement("td");
+
+  const btnRestar = document.createElement("button");
+  btnRestar.setAttribute("data-accion", "restar");
+  btnRestar.textContent = "−";
+
+  const spanCantidad = document.createElement("span");
+  spanCantidad.classList.add("cantidad");
+  spanCantidad.textContent = producto.stock;
+
+  const btnSumar = document.createElement("button");
+  btnSumar.setAttribute("data-accion", "sumar");
+  btnSumar.textContent = "+";
+
+  tdStock.append(btnRestar, " ", spanCantidad, " ", btnSumar);
+
+  const tdAcciones = document.createElement("td");
+  const btnEliminar = document.createElement("button");
+  btnEliminar.setAttribute("data-accion", "eliminar");
+  btnEliminar.textContent = "Eliminar";
+  tdAcciones.append(btnEliminar);
+
+  tr.append(tdCodigo, tdNombre, tdCategoria, tdPrecio, tdStock, tdAcciones);
+  return tr;
+}
+
+function pintarInventario(lista) {
+  tabla.replaceChildren();
+  for (const producto of lista) {
+    const fila = crearFila(producto);
+    tabla.append(fila);
+  }
+}
+
+async function iniciarInventario() {
+  try {
+    const datos = await cargarProductos();
+    inventario = datos.map((producto) => ({
+      ...producto,
+      id: Number(producto.id),
+      precio: Number(producto.precio),
+      stock: Number(producto.stock),
+    }));
+
+    pintarInventario(inventario);
+    console.log(`Productos cargados: ${inventario.length}`);
+  } catch (error) {
+    console.error("Error al cargar el inventario:", error);
+    resumenInventario.classList.remove("exito");
+    resumenInventario.classList.add("fallo");
+    resumenInventario.textContent = "Error al cargar los productos del inventario.";
+  }
+}
+
+iniciarInventario();
+
 // R2: UN solo listener en #tablaInventario: sube del botón a la fila con parentElement
 //     (botón → td → tr). sumar y restar cambian el stock (nunca negativo); eliminar quita la
 //     fila con remove().
