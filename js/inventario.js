@@ -236,3 +236,53 @@ selectOrden.addEventListener("change", () =>{
 // R6: Después de cada cambio, guarda en CLAVE_INVENTARIO y muestra "Productos: 12 |
 //     Unidades: 77 | Agotados: 2". El botón "Restaurar" borra esa clave y vuelve a cargar el
 //     JSON original.
+
+cargarDatosJson();
+
+//Obtener los nuevos productos
+import datos from '../json/productos.json' with { type: 'json' }; console.log("Datos importados directamente:", datos);
+
+//Obtener el inventario unificado
+function obtenerStockCompleto() { 
+    const nuevos = obtenerNuevosCambios(); return [...stockPredeterminado, ...nuevos]; } 
+
+function renderizarCatalogo() { 
+    const contenedor = document.getElementById("contenedorCatalogo"); 
+    const inventario = obtenerStockCompleto(); contenedor.textContent = ""; 
+    
+    inventario.forEach(producto => { 
+    // Crear una tarjeta contenedor para cada producto
+    const tarjeta = document.createElement("article"); 
+    tarjeta.classList.add("tarjeta-producto"); 
+    
+    // Título del producto  
+    const titulo = document.createElement("h3"); 
+    titulo.textContent = producto.nombre; 
+    
+    // Badge visual si está en preventa
+    if (producto.preventa) { 
+        const badge = document.createElement("span"); 
+        badge.textContent = " [PREVENTA]"; 
+        badge.style.color = "#d97706"; 
+        titulo.appendChild(badge); 
+    } 
+        
+    // Información de categoría y stock 
+    const info = document.createElement("p"); 
+    info.textContent = `Categoría: ${producto.categoria.toUpperCase()} | Disponible: ${producto.stock} u.`;
+
+    // Precio del producto formateado 
+    const precio = document.createElement("p"); 
+    precio.textContent = `Precio: $${Number(producto.precio).toLocaleString("es-CO")}`; 
+    
+    // Ensamblar la tarjeta en el DOM de forma segura [2] 
+    tarjeta.appendChild(titulo); 
+    tarjeta.appendChild(info); 
+    tarjeta.appendChild(precio); 
+    contenedor.appendChild(tarjeta); }); } 
+    
+    //Botón para borrar los cambios y volver a mostrar solo el JSON predeterminado
+    const btnRestablecer = document.getElementById("btnRestablecer"); 
+    btnRestablecer.addEventListener("click", () => { localStorage.removeItem("cambiosStock"); // Elimina solo los nuevos registros [1] 
+    renderizarCatalogo();}); // Carga inicial al abrir o recargar la página 
+    renderizarCatalogo();
