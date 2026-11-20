@@ -1,5 +1,8 @@
 // =========================================================
-// Grupo 3 · Hacer pedido
+// Grupo 3 - Las Bestias 🫦🔥
+//   Paz    → lider de integracion + programa R2 y R6
+//   Ardila → probador + programa R3 y R4
+//   Carlos → documentador + programa R1 y R5
 // =========================================================
 
 // ===== Código base (no modificar) =====
@@ -24,26 +27,202 @@ const REGLAS = {
 
 // ===== Tu código (comenta cada requisito con // R1, // R2...) =====
 
-// R1: Muestra el resumen guardado en CLAVE_RESUMEN: un li "Nombre x cantidad" por producto y
-//     el total con formatoPesos(). Si no hay resumen, muestra un aviso en #listaResumen y
-//     deshabilita el botón Confirmar.
+// PAZ (R2 y R6)
 
-// R2: Crea validarCampo(nombreCampo) usando el objeto REGLAS: muestra el mensaje en
-//     #error-<campo>, alterna las clases incorrecto y correcto en el input, y devuelve true
-//     o false.
+// (Paz, para R6) Aqui guardamos el contador de pedidos
+const CLAVE_CONSECUTIVO = "neontech:consecutivo";
 
-// R3: Validación en vivo con UN solo listener de input en el formulario (el evento
-//     burbujea): usa e.target.name para saber qué campo validar.
+// (Paz, para R2) Pone el mensaje de error debajo del campo 
+function mostrarError(nombreCampo, mensaje) {
+  const parrafo = document.getElementById("error-" + nombreCampo);
+  if (parrafo) {
+    parrafo.textContent = mensaje;
+  }
+}
 
-// R4: Con el evento change en el formulario: si el método de pago es "tarjeta", muestra
-//     #campoTarjeta; con cualquier otro, lo oculta (classList.toggle con condición).
+// R2 (Paz): Revisa un campo con su regla, muestra el error y lo pinta de rojo o verde.
+//     Devuelve true si esta bien y false si esta mal
+function validarCampo(nombreCampo) {
+  const input = formulario.elements[nombreCampo];
+  const valor = input.value.trim(); // quitamos espacios de los lados
+  const mensaje = REGLAS[nombreCampo](valor);
 
-// R5: Al enviar: preventDefault, FormData y validación de TODOS los campos a la vez (también
-//     la tarjeta si aplica), el método de pago y los términos. Si hay errores, mensaje con
-//     la clase fallo e imprime cuántos errores hay.
+  mostrarError(nombreCampo, mensaje);
 
-// R6: Si todo está bien: crea el pedido { numero, cliente, items, total, metodo, franja,
-//     estado: "Confirmado" }. El número sale de un consecutivo guardado en localStorage con
-//     padStart ("NT-0001"). Guárdalo en CLAVE_PEDIDO, vacía el carrito con
-//     guardarCarrito([]), borra el resumen, oculta el formulario y muestra el mensaje con un
-//     enlace a seguimiento.html.
+  if (mensaje === "") {
+    input.classList.remove("incorrecto");
+    input.classList.add("correcto");
+    return true;
+  } else {
+    input.classList.remove("correcto");
+    input.classList.add("incorrecto");
+    return false;
+  }
+}
+
+// R6 (Paz): Si todo esta bien creamos el pedido con su numero
+//     lo guardamos, vaciamos el carrito y mandamos al cliente a seguimiento.html
+function crearPedido(datos) {
+  // Sacamos el ultimo numero, le sumamos 1 y lo guardamos para el proximo pedido
+  let consecutivo = Number(leerLocal(CLAVE_CONSECUTIVO, 0));
+  consecutivo = consecutivo + 1;
+  guardarLocal(CLAVE_CONSECUTIVO, consecutivo);
+
+  // Le ponemos ceros adelante hasta que tenga 4 cifras: 1 → 0001
+  let numeroTexto = String(consecutivo);
+  while (numeroTexto.length < 4) {
+    numeroTexto = "0" + numeroTexto;
+  }
+
+  const pedido = {
+    numero: "NT-" + numeroTexto,
+    cliente: datos.get("nombre").trim(),
+    items: resumen.items,
+    total: Number(resumen.total),
+    metodo: datos.get("metodo"),
+    franja: datos.get("franja"),
+    estado: "Confirmado"
+  };
+
+  guardarLocal(CLAVE_PEDIDO, pedido);       
+  guardarCarrito([]);                       
+  localStorage.removeItem(CLAVE_RESUMEN);   
+  formulario.classList.add("oculto");
+
+  // Usamos textContent (y no innerHTML) porque el nombre lo escribe el usuario
+  const texto = document.createElement("p");
+  texto.textContent = "¡Gracias, " + pedido.cliente + "! Tu pedido " + pedido.numero +
+    " por " + formatoPesos(pedido.total) + " fue confirmado.";
+
+  const enlace = document.createElement("a");
+  enlace.href = "seguimiento.html";
+  enlace.textContent = "Ver el seguimiento del pedido →";
+
+  mensajeFinal.className = "mensaje exito";
+  mensajeFinal.innerHTML = "";
+  mensajeFinal.appendChild(texto);
+  mensajeFinal.appendChild(enlace);
+
+  console.log("Pedido creado:", pedido);
+}
+
+// ARDILA (R3 y R4)
+
+// R3 (Ardila): Un solo listener de input para todo el formulario.
+//     Con e.target.name sabemos en que campo esta escribiendo
+formulario.addEventListener("input", function (e) {
+  const nombreCampo = e.target.name;
+  if (REGLAS[nombreCampo]) {
+    validarCampo(nombreCampo);
+  }
+});
+
+// R4 (Ardila): Un solo listener de change. Si eligen "tarjeta" mostramos el campo
+//     de los 4 digitos, si no lo escondemos
+formulario.addEventListener("change", function (e) {
+  const campo = e.target;
+
+  if (campo.name === "metodo") {
+    if (campo.value === "tarjeta") {
+      campoTarjeta.classList.remove("oculto");
+    } else {
+      campoTarjeta.classList.add("oculto");
+    }
+    mostrarError("metodo", "");
+  }
+
+  if (campo.name === "terminos" && campo.checked) {
+    mostrarError("terminos", "");
+  }
+
+  if (campo.name === "franja") {
+    validarCampo("franja");
+  }
+});
+
+// CARLOS (R1 y R5)
+
+// R1 (Carlos): Mostramos los productos del carrito y el total
+function pintarResumen() {
+  listaResumen.innerHTML = "";
+
+  // Si no hay resumen o no tiene productos, avisamos y apagamos el boton
+  if (resumen === null || resumen.items.length === 0) {
+    const aviso = document.createElement("li");
+    aviso.textContent = "No hay productos para pedir. Vuelve al carrito y pulsa \"Hacer pedido\".";
+    listaResumen.appendChild(aviso);
+    totalResumen.textContent = formatoPesos(0);
+    btnConfirmar.disabled = true;
+    console.log("No hay resumen del pedido");
+    return;
+  }
+
+  // Un li por cada producto: "Nombre x cantidad"
+  for (let i = 0; i < resumen.items.length; i++) {
+    const producto = resumen.items[i];
+    const li = document.createElement("li");
+    li.textContent = producto.nombre + " x " + producto.cantidad;
+    listaResumen.appendChild(li);
+  }
+
+  totalResumen.textContent = formatoPesos(resumen.total);
+  btnConfirmar.disabled = false;
+}
+
+// R5 (Carlos): Al confirmar no recargamos la pagina, revisamos todos los campos
+//     y contamos cuantos errores hay
+formulario.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  if (resumen === null) {
+    return; // no hay nada que pedir
+  }
+
+  const datos = new FormData(formulario);
+  let errores = 0;
+
+  // Revisamos los campos normales uno por uno
+  const campos = ["nombre", "telefono", "correo", "direccion", "franja"];
+  for (let i = 0; i < campos.length; i++) {
+    if (validarCampo(campos[i]) === false) {
+      errores = errores + 1;
+    }
+  }
+
+  // Metodo de pago (si no eligieron ninguno llega null)
+  const metodo = datos.get("metodo");
+  if (metodo === null) {
+    mostrarError("metodo", "Elige un método de pago.");
+    errores = errores + 1;
+  } else {
+    mostrarError("metodo", "");
+  }
+
+  // La tarjeta solo se revisa si pagan con tarjeta
+  if (metodo === "tarjeta") {
+    if (validarCampo("tarjeta") === false) {
+      errores = errores + 1;
+    }
+  }
+
+  // Terminos (el checkbox llega null si no esta marcado)
+  if (datos.get("terminos") === null) {
+    mostrarError("terminos", "Debes aceptar los términos y condiciones.");
+    errores = errores + 1;
+  } else {
+    mostrarError("terminos", "");
+  }
+
+  // Si hay errores, aviso en rojo
+  if (errores > 0) {
+    mensajeFinal.className = "mensaje fallo";
+    mensajeFinal.textContent = "Tu pedido tiene " + errores + " errores por corregir.";
+    console.log("Pedido con " + errores + " errores por corregir");
+    return;
+  }
+
+  crearPedido(datos); // esta funcion es de Paz (R6), esta arriba
+});
+
+// Apenas carga la pagina pintamos el resumen (R1)
+pintarResumen();
