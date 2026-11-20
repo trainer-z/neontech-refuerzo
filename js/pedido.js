@@ -139,3 +139,90 @@ formulario.addEventListener("change", function (e) {
     validarCampo("franja");
   }
 });
+
+// CARLOS (R1 y R5)
+
+// R1 (Carlos): Mostramos los productos del carrito y el total
+function pintarResumen() {
+  listaResumen.innerHTML = "";
+
+  // Si no hay resumen o no tiene productos, avisamos y apagamos el boton
+  if (resumen === null || resumen.items.length === 0) {
+    const aviso = document.createElement("li");
+    aviso.textContent = "No hay productos para pedir. Vuelve al carrito y pulsa \"Hacer pedido\".";
+    listaResumen.appendChild(aviso);
+    totalResumen.textContent = formatoPesos(0);
+    btnConfirmar.disabled = true;
+    console.log("No hay resumen del pedido");
+    return;
+  }
+
+  // Un li por cada producto: "Nombre x cantidad"
+  for (let i = 0; i < resumen.items.length; i++) {
+    const producto = resumen.items[i];
+    const li = document.createElement("li");
+    li.textContent = producto.nombre + " x " + producto.cantidad;
+    listaResumen.appendChild(li);
+  }
+
+  totalResumen.textContent = formatoPesos(resumen.total);
+  btnConfirmar.disabled = false;
+}
+
+// R5 (Carlos): Al confirmar no recargamos la pagina, revisamos todos los campos
+//     y contamos cuantos errores hay
+formulario.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  if (resumen === null) {
+    return; // no hay nada que pedir
+  }
+
+  const datos = new FormData(formulario);
+  let errores = 0;
+
+  // Revisamos los campos normales uno por uno
+  const campos = ["nombre", "telefono", "correo", "direccion", "franja"];
+  for (let i = 0; i < campos.length; i++) {
+    if (validarCampo(campos[i]) === false) {
+      errores = errores + 1;
+    }
+  }
+
+  // Metodo de pago (si no eligieron ninguno llega null)
+  const metodo = datos.get("metodo");
+  if (metodo === null) {
+    mostrarError("metodo", "Elige un método de pago.");
+    errores = errores + 1;
+  } else {
+    mostrarError("metodo", "");
+  }
+
+  // La tarjeta solo se revisa si pagan con tarjeta
+  if (metodo === "tarjeta") {
+    if (validarCampo("tarjeta") === false) {
+      errores = errores + 1;
+    }
+  }
+
+  // Terminos (el checkbox llega null si no esta marcado)
+  if (datos.get("terminos") === null) {
+    mostrarError("terminos", "Debes aceptar los términos y condiciones.");
+    errores = errores + 1;
+  } else {
+    mostrarError("terminos", "");
+  }
+
+  // Si hay errores, aviso en rojo
+  if (errores > 0) {
+    mensajeFinal.className = "mensaje fallo";
+    mensajeFinal.textContent = "Tu pedido tiene " + errores + " errores por corregir.";
+    console.log("Pedido con " + errores + " errores por corregir");
+    return;
+  }
+
+  crearPedido(datos); // esta funcion es de Paz (R6), esta arriba
+});
+
+// Apenas carga la pagina pintamos el resumen (R1)
+pintarResumen();
