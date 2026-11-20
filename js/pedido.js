@@ -105,3 +105,37 @@ function crearPedido(datos) {
 
   console.log("Pedido creado:", pedido);
 }
+
+// ARDILA (R3 y R4)
+
+// R3 (Ardila): Un solo listener de input para todo el formulario.
+//     Con e.target.name sabemos en que campo esta escribiendo
+formulario.addEventListener("input", function (e) {
+  const nombreCampo = e.target.name;
+  if (REGLAS[nombreCampo]) {
+    validarCampo(nombreCampo);
+  }
+});
+
+// R4 (Ardila): Un solo listener de change. Si eligen "tarjeta" mostramos el campo
+//     de los 4 digitos, si no lo escondemos
+formulario.addEventListener("change", function (e) {
+  const campo = e.target;
+
+  if (campo.name === "metodo") {
+    if (campo.value === "tarjeta") {
+      campoTarjeta.classList.remove("oculto");
+    } else {
+      campoTarjeta.classList.add("oculto");
+    }
+    mostrarError("metodo", "");
+  }
+
+  if (campo.name === "terminos" && campo.checked) {
+    mostrarError("terminos", "");
+  }
+
+  if (campo.name === "franja") {
+    validarCampo("franja");
+  }
+});
